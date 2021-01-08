@@ -1,0 +1,5 @@
+name: LDbase Embargoes
+description: Embargoes module for LDbase
+package: LDbase
+type: module
+core: 8.x

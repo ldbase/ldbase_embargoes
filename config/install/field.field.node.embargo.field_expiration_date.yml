@@ -1,0 +1,21 @@
+# field.field.node.embargo.field_expiration_date.yml
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_expiration_date
+    - node.type.embargo
+  module:
+    - datetime
+id: node.embargo.field_expiration_date
+field_name: field_expiration_date
+entity_type: node
+bundle: embargo
+label: 'Expiration date'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

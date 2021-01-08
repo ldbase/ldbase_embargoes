@@ -1,0 +1,28 @@
+{
+  "name": "ldbase/ldbase_embargoes",
+  "description": "Embargoes module for LDbase",
+  "type": "drupal-custom-module",
+  "keywords": [
+    "Drupal",
+    "LDbase"
+  ],
+  "homepage": "https://github.com/ldbase/ldbase_embargoes",
+  "license": "GPL-2.0+",
+  "authors": [
+    {
+      "name": "Brian Arsenault",
+      "email": "barsenault@fsu.edu",
+      "role": "Maintainer"
+    },
+    {
+      "name": "Bryan J. Brown",
+      "email": "bjbrown@fsu.edu",
+      "role": "Maintainer"
+    },
+    {
+      "name": "Favenzio Calvo",
+      "email": "fcalvo@fsu.edu",
+      "role": "Maintainer"
+    }
+  ]
+}
