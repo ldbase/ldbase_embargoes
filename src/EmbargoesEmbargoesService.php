@@ -9,6 +9,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\FileInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Class EmbargoesEmbargoesService.
@@ -30,16 +31,26 @@ class EmbargoesEmbargoesService implements EmbargoesEmbargoesServiceInterface {
   protected $fieldManager;
 
   /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs a new EmbargoesEmbargoesService object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $manager
    *   An entity type manager.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager
    *   An entity field manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_manager, EntityFieldManagerInterface $field_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_manager, EntityFieldManagerInterface $field_manager, ModuleHandlerInterface $module_handler) {
     $this->entityManager = $entity_manager;
     $this->fieldManager = $field_manager;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -73,7 +84,7 @@ class EmbargoesEmbargoesService implements EmbargoesEmbargoesServiceInterface {
       }
       else {
         $now = time();
-        $expiry = strtotime($embargo->feld_expiration_date->value);
+        $expiry = strtotime($embargo->field_expiration_date->value);
         if ($expiry > $now) {
           $current_embargoes[$embargo_id] = $embargo_id;
         }
@@ -159,7 +170,7 @@ class EmbargoesEmbargoesService implements EmbargoesEmbargoesServiceInterface {
    * {@inheritdoc}
    */
   public function isUserGroupAdministrator(AccountInterface $user, $embargo_id) {
-    if (\Drupal::service('module_handler')->moduleExists('group')) {
+    if ($this->moduleHandler->moduleExists('group')) {
       $embargo = $this->entityManager
         ->getStorage('node')
         ->load($embargo_id);

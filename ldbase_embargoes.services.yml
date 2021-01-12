@@ -4,6 +4,7 @@ services:
     arguments:
       - '@entity_type.manager'
       - '@entity_field.manager'
+      - '@module_handler'
   ldbase_embargoes.node_access:
     class: Drupal\ldbase_embargoes\Access\EmbargoedNodeAccess
     arguments:
