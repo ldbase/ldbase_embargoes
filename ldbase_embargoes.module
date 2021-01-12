@@ -1,0 +1,72 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations.
+ */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\ldbase_embargoes\Access\EmbargoesFileAccessHandler;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function ldbase_embargoes_node_access(NodeInterface $node, $operation, AccountInterface $account) {
+  return \Drupal::service('ldbase_embargoes.node_access')->isActivelyEmbargoed($node, $account);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function ldbase_embargoes_media_access(EntityInterface $media, $operation, AccountInterface $account) {
+  return \Drupal::service('ldbase_embargoes.media_access')->isActivelyEmbargoed($media, $account);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function ldbase_embargoes_file_access(EntityInterface $file, $operation, AccountInterface $account) {
+  return \Drupal::service('ldbase_embargoes.file_access')->isActivelyEmbargoed($file, $account);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function ldbase_embargoes_node_view(array &$build, EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
+  \Drupal::service('ldbase_embargoes.node_access')->setEmbargoMessage($node);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function ldbase_embargoes_media_view(array &$build, EntityInterface $media, EntityViewDisplayInterface $display, $view_mode) {
+  \Drupal::service('ldbase_embargoes.media_access')->setEmbargoMessage($media);
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function ldbase_embargoes_entity_type_alter(array &$entity_types) {
+  if (isset($entity_types['file'])) {
+    $entity_types['file']->setHandlerClass('access', EmbargoesFileAccessHandler::class);
+  }
+}
+
+/**
+ * Implements hook_file_download().
+ */
+function ldbase_embargoes_file_download($uri) {
+  $files = \Drupal::entityTypeManager()
+    ->getStorage('file')
+    ->loadByProperties(['uri' => $uri]);
+  $file = reset($files);
+  if ($file instanceof EntityInterface) {
+    $access = \Drupal::service('ldbase_embargoes.file_access')->isActivelyEmbargoed($file, \Drupal::currentUser());
+    if ($access->isForbidden()) {
+      return -1;
+    }
+  }
+}

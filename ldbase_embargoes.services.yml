@@ -1,0 +1,33 @@
+services:
+  ldbase_embargoes.embargoes:
+    class: Drupal\ldbase_embargoes\EmbargoesEmbargoesService
+    arguments:
+      - '@entity_type.manager'
+      - '@entity_field.manager'
+  ldbase_embargoes.node_access:
+    class: Drupal\ldbase_embargoes\Access\EmbargoedNodeAccess
+    arguments:
+      - '@ldbase_embargoes.embargoes'
+      - '@request_stack'
+      - '@entity_type.manager'
+      - '@messenger'
+      - '@string_translation'
+      - '@current_user'
+  ldbase_embargoes.media_access:
+    class: Drupal\ldbase_embargoes\Access\EmbargoedMediaAccess
+    arguments:
+      - '@ldbase_embargoes.embargoes'
+      - '@request_stack'
+      - '@entity_type.manager'
+      - '@messenger'
+      - '@string_translation'
+      - '@current_user'
+  ldbase_embargoes.file_access:
+    class: Drupal\ldbase_embargoes\Access\EmbargoedFileAccess
+    arguments:
+      - '@ldbase_embargoes.embargoes'
+      - '@request_stack'
+      - '@entity_type.manager'
+      - '@messenger'
+      - '@string_translation'
+      - '@current_user'
