@@ -107,6 +107,17 @@ interface EmbargoesEmbargoesServiceInterface {
   public function getMediaParentNids($mid);
 
   /**
+   * Gets a list of nodes that are the parent of the given paragraph ID.
+   *
+   * @param int $pid
+   *   The ID of the paragraph entity to get parents for.
+   *
+   * @return int[]
+   *   A list of node IDs that are parents of the given paragraph.
+   */
+  public function getParagraphParentNids($pid);
+
+  /**
    * Gets a list of parent node IDs for the given file entity.
    *
    * @param \Drupal\file\FileInterface $file

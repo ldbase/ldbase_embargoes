@@ -253,6 +253,20 @@ class EmbargoesEmbargoesService implements EmbargoesEmbargoesServiceInterface {
     return $nids;
   }
 
+  public function getParagraphParentNids($pid) {
+    $paragraph_entity = $this->entityManager
+      ->getStorage('paragraph')
+      ->load($pid);
+    if ($paragraph_entity) {
+      $nid = $paragraph_entity->parent_id->value;
+      $nids = [$nid];
+    }
+    else {
+      $nids = [];
+    }
+    return $nids;
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -275,7 +289,8 @@ class EmbargoesEmbargoesService implements EmbargoesEmbargoesServiceInterface {
                 $nids = [array_keys($value)[0]];
                 break;
               case 'paragraph':
-                $nids = [array_keys($value)[0]];
+                $pid = array_keys($value)[0];
+                $nids = $this->getParagraphParentNids($pid);
                 break;
               case 'media':
                 $mid = array_keys($value)[0];
