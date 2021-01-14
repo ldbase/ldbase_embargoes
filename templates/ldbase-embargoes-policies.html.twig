@@ -1,0 +1,20 @@
+{#
+  /**
+   * @file
+   * Formats an  embargo restricted page.
+   *
+   * Available variables:
+   * - 'count': the count to display
+   * - 'embargoes_info': an indexed array containing any information required to
+   *   display each individual embargo.
+   */
+#}
+
+<span id='ldbase_embargoes_embargo_policy_block_preamble' class='ldbase_embargoes_embargo_policy_block'>{{ count }}</span>
+
+{% for info in embargoes_info %}
+<ul class='ldbase_embargoes_embargo_policy_block ldbase_embargoes_embargo_policy_block_list'>
+  <li id='ldbase_embargoes_embargo_policy_block_expiration_item' class='ldbase_embargoes_embargo_policy_block ldbase_embargoes_embargo_policy_block_item'><strong id='ldbase_embargoes_embargo_policy_block_expiration_label' class='ldbase_embargoes_embargo_policy_block ldbase_embargoes_embargo_policy_block_item_label'>{{ info.expiration }}</strong></li>
+  <li id='ldbase_embargoes_embargo_policy_block_type_item' class='ldbase_embargoes_embargo_policy_block ldbase_embargoes_embargo_policy_block_item'><strong id='ldbase_embargoes_embargo_policy_block_type_label' class='ldbase_embargoes_embargo_policy_block ldbase_embargoes_embargo_policy_block_item_label'>{{ info.type }}</strong></li>
+</ul>
+{% endfor %}

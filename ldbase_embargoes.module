@@ -70,3 +70,26 @@ function ldbase_embargoes_file_download($uri) {
     }
   }
 }
+
+/**
+ * Implements hook_theme().
+ */
+function ldbase_embargoes_theme($existing, $type, $theme, $path) {
+  return [
+    'ldbase_embargoes_policies' => [
+      'template' => 'ldbase-embargoes-policies',
+      'variables' => [
+        'count' => NULL,
+        'embargoes_info' => [],
+      ],
+    ],
+    'ldbase_embargoes_notifications' => [
+      'template' => 'ldbase-embargoes-notifications',
+      'variables' => [
+        'count' => NULL,
+        'embargoes_info' => [],
+        'message' => NULL,
+      ],
+    ],
+  ];
+}

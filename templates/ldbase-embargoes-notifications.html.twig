@@ -1,0 +1,25 @@
+{#
+  /**
+   * @file
+   * Formats an IP restricted page.
+   *
+   * Available variables:
+   * - 'count': the count to display
+   * - 'embargoes_info': an indexed array containing any information required to
+   *   display each individual embargo.
+   * - 'message': Configured message to request access.
+   */
+#}
+
+<span id='ldbase_embargoes_embargo_policy_block_preamble' class='ldbase_embargoes_embargo_policy_block'>{{ count }}</span>
+
+<ul class='ldbase_embargoes_embargo_policy_block ldbase_embargoes_embargo_policy_block_list'>
+{% for info in embargoes_info %}
+  <li id='{{ info.dom_id }}' class='ldbase_embargoes_embargo_policy_block ldbase_embargoes_embargo_policy_block_item'>
+    <strong id='ldbase_embargoes_embargo_policy_block_expiration_label' class='ldbase_embargoes_embargo_policy_block ldbase_embargoes_embargo_policy_block_item_label'>{{ info.expiration }}</strong>
+    <strong id='ldbase_embargoes_embargo_policy_block_expiration_msg' class='ldbase_embargoes_embargo_policy_block ldbase_embargoes_embargo_policy_block_item_label'>{{ info.type_message }}</strong>
+  </li>
+{% endfor %}
+</ul>
+
+<p class="ldbase_embargoes_embargo_policy_block ldbase_embargoes_embargo_policy_block_access_message">{{ message }}</p>
