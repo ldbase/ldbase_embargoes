@@ -177,11 +177,11 @@ class EmbargoesEmbargoesService implements EmbargoesEmbargoesServiceInterface {
       $embargoed_node = $this->entityManager
         ->getStorage('node')
         ->load($embargo->field_embargoed_node->target_id);
-      $group = array_pop(
-        $this->entityManager
+      $group_content = $this->entityManager
         ->getStorage('group_content')
-        ->loadByEntity($embargoed_node)
-        )->getGroup();
+        ->loadByEntity($embargoed_node);
+      $ldbase_group = array_pop($group_content);
+      $group = $ldbase_group->getGroup();
       $group_member = $group->getMember($user);
       $user_is_group_admin = FALSE;
       if ($group_member) {
