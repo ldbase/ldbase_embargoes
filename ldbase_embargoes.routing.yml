@@ -1,0 +1,18 @@
+route_callbacks:
+  - '\Drupal\ldbase_embargoes\Routing\EmbargoesRouteProvider::routes'
+
+ldbase_embargoes.confirm_access_request:
+  path: '/access-request/{node}/{embargo}/{user}/grant-access'
+  defaults:
+    _form: '\Drupal\ldbase_embargoes\Form\ConfirmAccessRequest'
+    _title: 'Confirm Access Request'
+  requirements:
+    _group_update_node_access_check: 'TRUE'
+  options:
+    parameters:
+      node:
+        type: ldbase_uuid
+      embargo:
+        type: entity:node
+      user:
+        type: entity:user

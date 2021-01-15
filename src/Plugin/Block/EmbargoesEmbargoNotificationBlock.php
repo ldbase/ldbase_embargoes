@@ -4,6 +4,8 @@ namespace Drupal\ldbase_embargoes\Plugin\Block;
 
 use Drupal\node\NodeInterface;
 use Drupal\ldbase_embargoes\EmbargoesEmbargoesServiceInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\ResettableStackedRouteMatchInterface;
@@ -152,10 +154,12 @@ class EmbargoesEmbargoNotificationBlock extends BlockBase implements ContainerFa
               $embargo_info['user_exempt'] = TRUE;
             }
             if (!$embargo_info['user_exempt']) {
-              $contact_message = /*$t->translate(
-                $this->notificationMessage,
-                ['@contact' => $this->adminMail]
-              );*/ "MESSAGE HERE";
+              $request_access_route = "ldbase_embargoes.request_{$node->getType()}_embargo_access";
+              $link_text = "Request Access";
+              $url = Url::fromRoute($request_access_route, array('node' => $node->uuid()));
+              $link = Link::fromTextAndUrl(t($link_text), $url)->toRenderable();
+              $link['#attributes'] = ['class' => ['ldbase-button']];
+              $contact_message = $link;
             }
           }
           else {
@@ -168,7 +172,7 @@ class EmbargoesEmbargoNotificationBlock extends BlockBase implements ContainerFa
 
           array_push(
             $cache_tags,
-            "config:embargoes.embargoes_embargo_entity.{$embargo->id()}"
+            "node.{$node->id()}.embargoes.{$embargo->id()}"
           );
 
         }
