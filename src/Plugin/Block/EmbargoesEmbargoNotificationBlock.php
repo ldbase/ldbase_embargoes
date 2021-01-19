@@ -142,30 +142,24 @@ class EmbargoesEmbargoNotificationBlock extends BlockBase implements ContainerFa
 
           // Determine if given user is exempt or not. If not, prepare a message
           // the user can use to request access.
-          if (\Drupal::currentUser()->isAuthenticated()) {
-            $exempt_users = $embargo->get('field_exempt_users')->getValue();
-            $embargo_info['user_exempt'] = FALSE;
-            foreach ($exempt_users as $user) {
-              if ($user['target_id'] == \Drupal::currentUser()->id()) {
-                $embargo_info['user_exempt'] = TRUE;
-              }
-            }
-            if ($this->embargoes->isUserGroupAdministrator(\Drupal::currentUser(), $embargo_id)) {
+          $exempt_users = $embargo->get('field_exempt_users')->getValue();
+          $embargo_info['user_exempt'] = FALSE;
+          foreach ($exempt_users as $user) {
+            if ($user['target_id'] == \Drupal::currentUser()->id()) {
               $embargo_info['user_exempt'] = TRUE;
             }
-            if (!$embargo_info['user_exempt']) {
-              $request_access_route = "ldbase_embargoes.request_{$node->getType()}_embargo_access";
-              $link_text = "Request Access";
-              $url = Url::fromRoute($request_access_route, array('node' => $node->uuid()));
-              $link = Link::fromTextAndUrl(t($link_text), $url)->toRenderable();
-              $link['#attributes'] = ['class' => ['ldbase-button']];
-              $contact_message = $link;
-            }
           }
-          else {
-            $contact_message = '';
+          if ($this->embargoes->isUserGroupAdministrator(\Drupal::currentUser(), $embargo_id)) {
+            $embargo_info['user_exempt'] = TRUE;
           }
-
+          if (!$embargo_info['user_exempt']) {
+            $request_access_route = "ldbase_embargoes.request_{$node->getType()}_embargo_access";
+            $link_text = "Request Access";
+            $url = Url::fromRoute($request_access_route, array('node' => $node->uuid()));
+            $link = Link::fromTextAndUrl(t($link_text), $url)->toRenderable();
+            $link['#attributes'] = ['class' => ['ldbase-button']];
+            $contact_message = $link;
+          }
 
           $embargo_info['dom_id'] = Html::getUniqueId('ldbase_embargo_notification');
           $embargoes_info[] = $embargo_info;

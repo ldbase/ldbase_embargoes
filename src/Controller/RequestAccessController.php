@@ -62,21 +62,26 @@ class RequestAccessController extends ControllerBase {
   }
 
   public function requestAccess(NodeInterface $node) {
-    $node_id = $node->id();
-    $embargo_id = $this->embargoes->getAllEmbargoesByNids([$node_id]);
+    if (!\Drupal::currentUser()->isAnonymous()) {
+      $node_id = $node->id();
+      $embargo_id = $this->embargoes->getAllEmbargoesByNids([$node_id]);
 
-    $values = [
-      'data' => [
-        'node_id' => $node_id,
-        'embargo_id' => $embargo_id[0],
-      ]
-    ];
+      $values = [
+        'data' => [
+          'node_id' => $node_id,
+          'embargo_id' => $embargo_id[0],
+        ]
+      ];
 
-    $operation = 'add';
-    // get webform and load values
-    $webform = $this->entityTypeManager->getStorage('webform')->load('request_file_access');
-    $webform = $webform->getSubmissionForm($values, $operation);
-    return $webform;
+      $operation = 'add';
+      // get webform and load values
+      $webform = $this->entityTypeManager->getStorage('webform')->load('request_file_access');
+      $webform = $webform->getSubmissionForm($values, $operation);
+      return $webform;
+    }
+    else {
+      return $this->redirect('user.login');
+    }
   }
 
 }
