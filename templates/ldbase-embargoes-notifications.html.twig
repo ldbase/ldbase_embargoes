@@ -11,6 +11,10 @@
    */
 #}
 
+{% if message is not empty %}
+  {{ attach_library('ldbase_embargoes/embargoes-file-embargoes') }}
+{% endif %}
+
 <span id='ldbase_embargoes_embargo_policy_block_preamble' class='ldbase_embargoes_embargo_policy_block'>{{ count }}</span>
 
 <ul class='ldbase_embargoes_embargo_policy_block ldbase_embargoes_embargo_policy_block_list'>

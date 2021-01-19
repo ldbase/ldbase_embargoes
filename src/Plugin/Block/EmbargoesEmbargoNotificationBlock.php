@@ -144,6 +144,7 @@ class EmbargoesEmbargoNotificationBlock extends BlockBase implements ContainerFa
           // the user can use to request access.
           $exempt_users = $embargo->get('field_exempt_users')->getValue();
           $embargo_info['user_exempt'] = FALSE;
+
           foreach ($exempt_users as $user) {
             if ($user['target_id'] == \Drupal::currentUser()->id()) {
               $embargo_info['user_exempt'] = TRUE;
@@ -175,6 +176,7 @@ class EmbargoesEmbargoNotificationBlock extends BlockBase implements ContainerFa
           '#theme' => 'ldbase_embargoes_notifications',
           '#count' => $embargoes_count,
           '#message' => $contact_message,
+          '#change_styles' => $change_styles,
           '#embargoes_info' => $embargoes_info,
           '#cache' => [
             'tags' => $cache_tags,
