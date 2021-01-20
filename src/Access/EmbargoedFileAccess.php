@@ -28,6 +28,7 @@ class EmbargoedFileAccess extends EmbargoedAccessResult {
     if (!empty($embargoes)) {
       $state = AccessResult::forbidden();
       $state->addCacheableDependency($file);
+      $state->addcacheableDependency($parent_nodes);
       $state->addCacheableDependency($user);
     }
     return $state;
