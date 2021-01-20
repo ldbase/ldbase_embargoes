@@ -106,7 +106,7 @@ class EmbargoesEmbargoNotificationBlock extends BlockBase implements ContainerFa
         ];
         $embargoes_count = $t->formatPlural(
           $num_embargoes,
-          'This resource is under 1 embargo:',
+          'This resource is under an embargo:',
           'This resource is under @count embargoes:'
         );
 
@@ -172,7 +172,7 @@ class EmbargoesEmbargoNotificationBlock extends BlockBase implements ContainerFa
 
         }
 
-        return [
+        $render = [
           '#theme' => 'ldbase_embargoes_notifications',
           '#count' => $embargoes_count,
           '#message' => $contact_message,
@@ -182,6 +182,15 @@ class EmbargoesEmbargoNotificationBlock extends BlockBase implements ContainerFa
             'tags' => $cache_tags,
           ],
         ];
+        if ($contact_message) {
+          $render['#attached'] = [
+            'library' => [
+              'ldbase_embargoes/embargoes-file-embargoes',
+            ],
+          ];
+        }
+
+        return $render;
       }
     }
 

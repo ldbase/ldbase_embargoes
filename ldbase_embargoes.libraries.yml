@@ -2,6 +2,9 @@ embargoes-file-embargoes:
   version: 1.x
   js:
     js/embargoes-file-embargoes.js: {}
+  css:
+    component:
+      css/ldbase_embargoes.css: {}
   dependencies:
     - core/jquery
     - core/jquery.once

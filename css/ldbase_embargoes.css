@@ -1,0 +1,8 @@
+span.file a.restricted-access {
+  color: red !important;
+  background-color: white !important;
+}
+
+span.file a.restricted-access::after {
+  content: none !important;
+}
