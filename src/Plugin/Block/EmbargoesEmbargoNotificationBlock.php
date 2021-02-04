@@ -176,7 +176,6 @@ class EmbargoesEmbargoNotificationBlock extends BlockBase implements ContainerFa
           '#theme' => 'ldbase_embargoes_notifications',
           '#count' => $embargoes_count,
           '#message' => $contact_message,
-          '#change_styles' => $change_styles,
           '#embargoes_info' => $embargoes_info,
           '#cache' => [
             'tags' => $cache_tags,
