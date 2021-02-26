@@ -153,6 +153,9 @@ class EmbargoesEmbargoNotificationBlock extends BlockBase implements ContainerFa
           if ($this->embargoes->isUserGroupAdministrator(\Drupal::currentUser(), $embargo_id)) {
             $embargo_info['user_exempt'] = TRUE;
           }
+          if ($this->embargoes->isUserGroupEditor(\Drupal::currentUser(), $embargo_id)) {
+            $embargo_info['user_exempt'] = TRUE;
+          }
           if (!$embargo_info['user_exempt']) {
             $request_access_route = "ldbase_embargoes.request_{$node->getType()}_embargo_access";
             $link_text = "Request Access";

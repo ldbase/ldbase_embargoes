@@ -107,7 +107,8 @@ class EmbargoesEmbargoesService implements EmbargoesEmbargoesServiceInterface {
    *   if any of the following conditions are true:
    *   - The user is in the list of exempt users for the embargo
    *   - The user has the 'bypass embargoes restrictions' permission
-   *   - The user is a Group administrator
+   *   - The user is a Project Group administrator
+   *   - The user is a Project Group editor
    */
   public function getActiveEmbargoesByNids(array $nids, AccountInterface $user) {
     $active_embargoes = [];
@@ -116,7 +117,8 @@ class EmbargoesEmbargoesService implements EmbargoesEmbargoesServiceInterface {
       $user_is_exempt = $this->isUserInExemptUsers($user, $embargo_id);
       $role_is_exempt = $user->hasPermission('bypass embargoes restrictions');
       $user_is_group_admin = $this->isUserGroupAdministrator($user, $embargo_id);
-      if (!$user_is_exempt && !$role_is_exempt && !$user_is_group_admin) {
+      $user_is_group_editor = $this->isUserGroupEditor($user, $embargo_id);
+      if (!$user_is_exempt && !$role_is_exempt && !$user_is_group_admin && !$user_is_group_editor) {
         $active_embargoes[$embargo_id] = $embargo_id;
       }
     }
@@ -170,6 +172,23 @@ class EmbargoesEmbargoesService implements EmbargoesEmbargoesServiceInterface {
    * {@inheritdoc}
    */
   public function isUserGroupAdministrator(AccountInterface $user, $embargo_id) {
+    return $this->hasGroupRole($user, $embargo_id, 'project_group-administrator');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isUserGroupEditor(AccountInterface $user, $embargo_id) {
+    return $this->hasGroupRole($user, $embargo_id, 'project_group-editor');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  private function hasGroupRole(AccountInterface $user, $embargo_id, $group_role) {
+    if (empty($group_role)) {
+      return false;
+    }
     if ($this->moduleHandler->moduleExists('group')) {
       $embargo = $this->entityManager
         ->getStorage('node')
@@ -183,16 +202,14 @@ class EmbargoesEmbargoesService implements EmbargoesEmbargoesServiceInterface {
       $ldbase_group = array_pop($group_content);
       $group = $ldbase_group->getGroup();
       $group_member = $group->getMember($user);
-      $user_is_group_admin = FALSE;
+      $user_has_role = FALSE;
       if ($group_member) {
         $group_member_roles = $group_member->getRoles();
-        foreach ($group_member_roles as $group_role) {
-          if ($group_role->hasPermission('administer members')) {
-            $user_is_group_admin = TRUE;
-          }
+        if (in_array($group_role, array_keys($group_member_roles))) {
+          $user_has_role = true;
         }
       }
-      return $user_is_group_admin;
+      return $user_has_role;
     }
     else {
       return FALSE;

@@ -88,6 +88,17 @@ interface EmbargoesEmbargoesServiceInterface {
   public function isUserGroupAdministrator(AccountInterface $user, $embargo_id);
 
   /**
+   * Determines whether a given $user is an editor for the Group.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $user
+   *   The user entity to test against.
+   * @param int $embargo_id
+   *   The embargo to check the list of exempt users for.
+   *
+   */
+  public function isUserGroupEditor(AccountInterface $user, $embargo_id);
+
+  /**
    * Gets a list of entity_reference fields that target media.
    *
    * @return \Drupal\Core\Entity\EntityInterface
