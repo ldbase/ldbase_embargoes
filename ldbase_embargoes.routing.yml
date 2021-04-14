@@ -16,3 +16,17 @@ ldbase_embargoes.confirm_access_request:
         type: entity:node
       user:
         type: entity:user
+# remove a user from exempt users
+ldbase_embargoes.remove_access_exemption:
+  path: '/embargo/{embargo}/{user}/remove-access-exemption'
+  defaults:
+    _form: '\Drupal\ldbase_embargoes\Form\ConfirmExemptionDeleteForm'
+    _title: 'Confirm Access Removal'
+  requirements:
+    _permission: 'access content'
+  options:
+    parameters:
+      embargo:
+        type: ldbase_uuid
+      user:
+        type: entity:user
