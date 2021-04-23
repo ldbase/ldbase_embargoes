@@ -4,6 +4,7 @@ namespace Drupal\ldbase_embargoes\Form;
 
 use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -107,6 +108,7 @@ class ConfirmAccessRequest extends ConfirmFormBase {
     if (!$user_already_exempt) {
       $embargo->field_exempt_users[] = ['target_id' => $user->id()];
       $embargo->save();
+      Cache::invalidateTags($node->getCacheTags());
       $this->messenger()->addStatus($this->t('The user has been given access to the embargoed material.'));
     }
     $route = 'entity.node.canonical';

@@ -4,6 +4,7 @@ namespace Drupal\ldbase_embargoes\Form;
 
 use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -86,6 +87,7 @@ class ConfirmExemptionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
     $user_id = $this->user->uid->value;
     $embargo = $this->embargo;
     $exempt_users = $embargo->field_exempt_users->getValue();
@@ -96,7 +98,9 @@ class ConfirmExemptionDeleteForm extends ConfirmFormBase {
     }
     $embargo->set('field_exempt_users', $exempt_users);
     $embargo->save();
-
+    $node_id = $embargo->field_embargoed_node->target_id;
+    $embargoed_node = $node_storage->load($node_id);
+    Cache::invalidateTags($embargoed_node->getCacheTags());
     $this->messenger()->addStatus($this->t('Access to the embargoed material has been removed.'));
   }
 }
