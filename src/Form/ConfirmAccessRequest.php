@@ -54,10 +54,10 @@ class ConfirmAccessRequest extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    $node = $this->node;
-    $route = 'entity.node.canonical';
+    $current_user = \Drupal::currentUser();
+    $route = 'entity.user.canonical';
     $url_parameters = [
-      'node' => $node->id(),
+      'user' => $current_user->id(),
     ];
     $url = Url::fromRoute($route, $url_parameters);
     return $url;
@@ -100,16 +100,18 @@ class ConfirmAccessRequest extends ConfirmFormBase {
     $exempt_users = $embargo->get('field_exempt_users')->getValue();
     $user_already_exempt = false;
     foreach ($exempt_users as $exempt_user) {
-      if ($exempt_user['target_id'] = $user->id()) {
+      if ($exempt_user['target_id'] == $user->id()) {
         $user_already_exempt = true;
       }
-      $this->messenger()->addStatus($this->t('The user already has access to the embargoed material.'));
     }
     if (!$user_already_exempt) {
       $embargo->field_exempt_users[] = ['target_id' => $user->id()];
       $embargo->save();
       Cache::invalidateTags($node->getCacheTags());
       $this->messenger()->addStatus($this->t('The user has been given access to the embargoed material.'));
+    }
+    else {
+      $this->messenger()->addStatus($this->t('The user already has access to the embargoed material.'));
     }
     $route = 'entity.node.canonical';
     $url_parameters = [
