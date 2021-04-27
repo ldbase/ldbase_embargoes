@@ -148,13 +148,19 @@ class EmbargoesEmbargoNotificationBlock extends BlockBase implements ContainerFa
           foreach ($exempt_users as $user) {
             if ($user['target_id'] == \Drupal::currentUser()->id()) {
               $embargo_info['user_exempt'] = TRUE;
+              // user is exempt, change message
+              $embargo_info['type_message'] = $t->translate('You have been granted an access exemption to this resource.');
             }
           }
           if ($this->embargoes->isUserGroupAdministrator(\Drupal::currentUser(), $embargo_id)) {
             $embargo_info['user_exempt'] = TRUE;
+            // user is admin, change message
+              $embargo_info['type_message'] = $t->translate('You have access to this resource as a Project Administrator.');
           }
           if ($this->embargoes->isUserGroupEditor(\Drupal::currentUser(), $embargo_id)) {
             $embargo_info['user_exempt'] = TRUE;
+            // user is editor, change message
+              $embargo_info['type_message'] = $t->translate('You have access to this resource as a Project Editor.');
           }
           if (!$embargo_info['user_exempt']) {
             $request_access_route = "ldbase_embargoes.request_{$node->getType()}_embargo_access";

@@ -122,6 +122,7 @@ abstract class EmbargoedAccessResult implements EmbargoedAccessInterface {
           $args = [
             '%date' => $expiration_date,
           ];
+
           // Determine a message to set.
           if (!$type && !$expiration) {
             $messages[] = $this->translator->translate('- Access to all associated files of this resource is restricted indefinitely.');
@@ -137,6 +138,24 @@ abstract class EmbargoedAccessResult implements EmbargoedAccessInterface {
           }
           else {
             $messages[] = $this->translator->translate('- Access to this resource and all associated resources is restricted until %date.', $args);
+          }
+
+          // determine if current user is exempt
+          $user_is_exempt = false;
+          $current_user = \Drupal::currentUser();
+          $exempt_users = $embargo->get('field_exempt_users')->getValue();
+          foreach ($exempt_users as $user) {
+            if ($user['target_id'] == $current_user->id()) {
+              $messages[] = $this->translator->translate('- You have been granted an access exemption to this resource.');
+            }
+          }
+          // is user group admin?
+          if ($this->embargoes->isUserGroupAdministrator($current_user, $embargo_id)) {
+            $messages[] = $this->translator->translate('- You have access to this resource as a Project Administrator.');
+          }
+          // is user project editor?
+          if ($this->embargoes->isUserGroupEditor($current_user, $embargo_id)) {
+            $messages[] = $this->translator->translate('- You have access to this resource as a Project Editor.');
           }
         }
       }
