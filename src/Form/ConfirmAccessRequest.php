@@ -7,6 +7,7 @@ use Drupal\user\Entity\User;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Render\Markup;
 
@@ -99,6 +100,13 @@ class ConfirmAccessRequest extends ConfirmFormBase {
     $embargo = $this->embargo;
     $exempt_users = $embargo->get('field_exempt_users')->getValue();
     $user_already_exempt = false;
+
+    $route = 'entity.node.canonical';
+    $url_parameters = [
+      'node' => $node->id(),
+    ];
+    $url = Url::fromRoute($route, $url_parameters);
+
     foreach ($exempt_users as $exempt_user) {
       if ($exempt_user['target_id'] == $user->id()) {
         $user_already_exempt = true;
@@ -109,15 +117,30 @@ class ConfirmAccessRequest extends ConfirmFormBase {
       $embargo->save();
       Cache::invalidateTags($node->getCacheTags());
       $this->messenger()->addStatus($this->t('The user has been given access to the embargoed material.'));
+
+      // send notification
+      $current_user_id = \Drupal::currentUser()->id();
+      $link_text = ucfirst($node->bundle()) . ': ' . $node->getTitle();
+      $link_to_object = Link::fromTextAndUrl(t($link_text), $url)->toString();
+      $ldbase_message_service = \Drupal::service('ldbase_handlers.message_service');
+      $message_template = 'ldbase_embargoes_access_granted';
+      $message = \Drupal::entityTypeManager()->getStorage('message')
+        ->create(['template' => $message_template, 'uid' => $current_user_id]);
+      $message->set('field_from_user', $current_user_id);
+      $message->set('field_to_user', $user->id());
+      $message->setArguments([
+        '@link_to_object' => $link_to_object,
+      ]);
+      $message->save();
+
+      // send email notification
+      $notifier = \Drupal::service('message_notify.sender');
+      $notifier->send($message);
     }
     else {
       $this->messenger()->addStatus($this->t('The user already has access to the embargoed material.'));
     }
-    $route = 'entity.node.canonical';
-    $url_parameters = [
-      'node' => $node->id(),
-    ];
-    $url = Url::fromRoute($route, $url_parameters);
+
     $form_state->setRedirectUrl($url);
 
   }
