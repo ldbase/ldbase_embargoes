@@ -17,6 +17,8 @@
 {% for info in embargoes_info %}
   <li id='{{ info.dom_id }}' class='ldbase_embargoes_embargo_policy_block ldbase_embargoes_embargo_policy_block_item'>
     <span id='ldbase_embargoes_embargo_policy_block_expiration_label' class='ldbase_embargoes_embargo_policy_block ldbase_embargoes_embargo_policy_block_item_label'>{{ info.expiration }}</span>
+  </li>
+  <li class='ldbase_embargoes_embargo_policy_block ldbase_embargoes_embargo_policy_block_item'>
     <span id='ldbase_embargoes_embargo_policy_block_expiration_msg' class='ldbase_embargoes_embargo_policy_block ldbase_embargoes_embargo_policy_block_item_label'>{{ info.type_message }}</span>
   </li>
 {% endfor %}
