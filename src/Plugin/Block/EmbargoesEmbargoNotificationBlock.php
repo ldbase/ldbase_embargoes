@@ -104,6 +104,7 @@ class EmbargoesEmbargoNotificationBlock extends BlockBase implements ContainerFa
           "extensions",
           "env",
         ];
+        $cache_context = ['user'];
         $embargoes_count = $t->formatPlural(
           $num_embargoes,
           'This resource is under an embargo:',
@@ -188,6 +189,7 @@ class EmbargoesEmbargoNotificationBlock extends BlockBase implements ContainerFa
           '#embargoes_info' => $embargoes_info,
           '#cache' => [
             'tags' => $cache_tags,
+            'context' => $cache_context,
           ],
         ];
         if ($contact_message) {
