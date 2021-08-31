@@ -50,7 +50,8 @@ class RequestFileAccessHandler extends WebformHandlerBase {
     $confirmation_route = 'ldbase_embargoes.confirm_access_request';
     $confirmation_text = 'click here to grant access';
     $confirmation_url = Url::fromRoute($confirmation_route, array('node' => $node->uuid(), 'embargo' => $embargo_id, 'user' => $current_user->id()));
-    $confirmation_link = Link::fromTextAndUrl(t($confirmation_text), $confirmation_url)->toString();
+    //$confirmation_link = Link::fromTextAndUrl(t($confirmation_text), $confirmation_url)->toString();
+    $confirmation_link = $confirmation_url->setAbsolute()->toString();
     $ldbase_message_service = \Drupal::service('ldbase_handlers.message_service');
 
 
