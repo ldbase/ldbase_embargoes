@@ -121,14 +121,16 @@ class ConfirmAccessRequest extends ConfirmFormBase {
       // send notification
       $current_user_id = \Drupal::currentUser()->id();
       $link_text = ucfirst($node->bundle()) . ': ' . $node->getTitle();
-      $link_to_object = Link::fromTextAndUrl(t($link_text), $url)->toString();
+      //$link_to_object = Link::fromTextAndUrl(t($link_text), $url)->toString();
+      $link_to_object = $url->setAbsolute()->toString();
       $ldbase_message_service = \Drupal::service('ldbase_handlers.message_service');
       $message_template = 'ldbase_embargoes_access_granted';
       $message = \Drupal::entityTypeManager()->getStorage('message')
-        ->create(['template' => $message_template, 'uid' => $current_user_id]);
+        ->create(['template' => $message_template, 'uid' => $user->id()]);
       $message->set('field_from_user', $current_user_id);
       $message->set('field_to_user', $user->id());
       $message->setArguments([
+        '@ldbase_object' => $link_text,
         '@link_to_object' => $link_to_object,
       ]);
       $message->save();
