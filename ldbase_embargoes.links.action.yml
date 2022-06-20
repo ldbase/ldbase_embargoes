@@ -1,6 +1,0 @@
-ldbase_embargoes.view_embargo_exemptions:
-  route_name: 'view.ldbase_embargo_exemptions.page_1'
-  title: 'View Granted Embargo Exemptions'
-  weight: 99
-  appears_on:
-    - 'view.group_members.ldbase_project'
