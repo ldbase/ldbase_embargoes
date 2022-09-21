@@ -36,14 +36,18 @@ function ldbase_embargoes_file_access(EntityInterface $file, $operation, Account
  * Implements hook_ENTITY_TYPE_view().
  */
 function ldbase_embargoes_node_view(array &$build, EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
-  \Drupal::service('ldbase_embargoes.node_access')->setEmbargoMessage($node);
+  if (\Drupal::RouteMatch()->getRouteName() != 'view.search.page_1') {
+    \Drupal::service('ldbase_embargoes.node_access')->setEmbargoMessage($node);
+  }
 }
 
 /**
  * Implements hook_ENTITY_TYPE_view().
  */
 function ldbase_embargoes_media_view(array &$build, EntityInterface $media, EntityViewDisplayInterface $display, $view_mode) {
-  \Drupal::service('ldbase_embargoes.media_access')->setEmbargoMessage($media);
+  if (\Drupal::RouteMatch()->getRouteName() != 'view.search.page_1') {
+    \Drupal::service('ldbase_embargoes.media_access')->setEmbargoMessage($media);
+  }
 }
 
 /**
