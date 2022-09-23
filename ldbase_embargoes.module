@@ -36,7 +36,7 @@ function ldbase_embargoes_file_access(EntityInterface $file, $operation, Account
  * Implements hook_ENTITY_TYPE_view().
  */
 function ldbase_embargoes_node_view(array &$build, EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
-  if (\Drupal::RouteMatch()->getRouteName() != 'view.search.page_1') {
+  if (\Drupal::RouteMatch()->getRouteName() == 'entity.node.canonical') {
     \Drupal::service('ldbase_embargoes.node_access')->setEmbargoMessage($node);
   }
 }
@@ -45,7 +45,7 @@ function ldbase_embargoes_node_view(array &$build, EntityInterface $node, Entity
  * Implements hook_ENTITY_TYPE_view().
  */
 function ldbase_embargoes_media_view(array &$build, EntityInterface $media, EntityViewDisplayInterface $display, $view_mode) {
-  if (\Drupal::RouteMatch()->getRouteName() != 'view.search.page_1') {
+  if (\Drupal::RouteMatch()->getRouteName() == 'entity.node.canonical') {
     \Drupal::service('ldbase_embargoes.media_access')->setEmbargoMessage($media);
   }
 }
