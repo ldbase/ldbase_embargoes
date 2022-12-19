@@ -62,6 +62,7 @@ class EmbargoesEmbargoesService implements EmbargoesEmbargoesServiceInterface {
       $node_embargoes = $this->entityManager
         ->getStorage('node')
         ->getQuery()
+        ->accesscheck(TRUE)
         ->condition('field_embargoed_node', $nid)
         ->execute();
       $all_embargoes = array_merge($all_embargoes, $node_embargoes);
@@ -264,7 +265,7 @@ class EmbargoesEmbargoesService implements EmbargoesEmbargoesServiceInterface {
       foreach ($media_fields as $field) {
         $group->condition($field, $mid);
       }
-      $result = $query->condition($group)->execute();
+      $result = $query->accessCheck(TRUE)->condition($group)->execute();
       $nids = array_values($result);
     }
     return $nids;
