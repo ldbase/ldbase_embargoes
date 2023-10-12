@@ -2,6 +2,7 @@
 
 namespace Drupal\ldbase_embargoes\Plugin\WebformHandler;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Entity\EntityTypeManager;
@@ -50,8 +51,9 @@ class RequestFileAccessHandler extends WebformHandlerBase {
     $confirmation_route = 'ldbase_embargoes.confirm_access_request';
     $confirmation_text = 'click here to grant access';
     $confirmation_url = Url::fromRoute($confirmation_route, array('node' => $node->uuid(), 'embargo' => $embargo_id, 'user' => $current_user->id()));
+    $destination_param = UrlHelper::buildQuery(['destination' => $confirmation_url->toString()]);
     //$confirmation_link = Link::fromTextAndUrl(t($confirmation_text), $confirmation_url)->toString();
-    $confirmation_link = $confirmation_url->setAbsolute()->toString();
+    $confirmation_link = $confirmation_url->setAbsolute()->toString() . '?' . $destination_param;
     $ldbase_message_service = \Drupal::service('ldbase_handlers.message_service');
 
 
