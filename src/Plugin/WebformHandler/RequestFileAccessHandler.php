@@ -78,13 +78,13 @@ class RequestFileAccessHandler extends WebformHandlerBase {
         '@reasons_for_access' => $reason,
         '@confirm_link' => $confirmation_link,
       ]);
+
+      $message->save();
+
+      // send email notification
+      $notifier = \Drupal::service('message_notify.sender');
+      $notifier->send($message);
     }
-
-    $message->save();
-
-    // send email notification
-    $notifier = \Drupal::service('message_notify.sender');
-    $notifier->send($message);
 
   }
 
