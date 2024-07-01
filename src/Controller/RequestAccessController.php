@@ -94,7 +94,7 @@ class RequestAccessController extends ControllerBase {
 
       // Has the user verified their email address?
       $uid = $this->currentUser->id();
-      if ($this->userEmailVerification->isVerificationNeeded($uid)) {
+      if (!$this->userEmailVerification->isVerificationNeeded($uid)) {
         // if not user, redirect to Person view with error message
         $redirect_message = $this->t("You must verify your email address to contact others. <a href='/user/user-email-verification'>Resend verification link</a>");
         $this->messenger()->addError($redirect_message);
